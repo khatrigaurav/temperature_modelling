@@ -1,1 +1,4 @@
-
+# Default files to exclude
+/data
+/Analytics/Analysis.ipynb
+local_stations_summary.xlsx
