@@ -1,0 +1,61 @@
+<mxfile host="app.diagrams.net" modified="2023-10-03T14:40:29.783Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="ArdxJgRGKPRKVl50ddsS" version="21.1.5" type="device">
+  <diagram name="Page-1" id="G6a9zcK1WMyGFKDMdyps">
+    <mxGraphModel dx="2284" dy="1890" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_NKXdek6IF60lmIvRNmP-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="3" target="_NKXdek6IF60lmIvRNmP-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Data Scraping from private stations&#xa;" style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;shadow=0;glass=0;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="-380" y="-730" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_NKXdek6IF60lmIvRNmP-11" target="_NKXdek6IF60lmIvRNmP-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-11" value="&#xa;Data PreProcessing&#xa;" style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="-180" y="-730" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_NKXdek6IF60lmIvRNmP-12" target="_NKXdek6IF60lmIvRNmP-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-12" value="Data Visualization   " style="whiteSpace=wrap;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="-730" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-19" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_NKXdek6IF60lmIvRNmP-13" target="_NKXdek6IF60lmIvRNmP-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-13" value="Data Quality Assesment" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="-730" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-21" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_NKXdek6IF60lmIvRNmP-14" target="_NKXdek6IF60lmIvRNmP-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-14" value="Data Modelling" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;gradientColor=none;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="-730" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-20" value="Tool Development&#xa;" style="whiteSpace=wrap;strokeWidth=2;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="420" y="-630" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-23" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="_NKXdek6IF60lmIvRNmP-22" target="_NKXdek6IF60lmIvRNmP-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-22" value="Data from Satellites" style="whiteSpace=wrap;strokeWidth=2;fillColor=#ffe6cc;strokeColor=#d79b00;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="-180" y="-630" width="136" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-24" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Legend&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="-370" y="-530" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-25" value="Completed" style="whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="-380" y="-500" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-27" value="In Progress" style="whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="-380" y="-450" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_NKXdek6IF60lmIvRNmP-31" value="Future Stage" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-380" y="-400" width="100" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

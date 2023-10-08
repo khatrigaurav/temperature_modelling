@@ -119,21 +119,34 @@ def process_wunder(pws_df):
 
 def plot_(dfx,animation_frame_comp,frame_duration):
     '''
+    dfx : Source dataframe
     animation_frame_comp : defines which column to animate upon (eg. year, month)
     frame_duration : defines how fast the animation should be
+
+    Usage : dp.plot_(df_vegas,'day_of_year',180)
+
     '''
     
     # fig = pe.scatter_mapbox(dfx,lat='latitude',lon = 'longitude',animation_frame='day_of_year',color = 'temperature',range_color=[-40,40],hover_data=['station'],height = 610)
     #Making the legend dynamic
     dfx = dfx.sort_values(by = [animation_frame_comp])
-    fig = pe.scatter_mapbox(dfx,lat='latitude',lon = 'longitude',animation_frame=animation_frame_comp,color = 'temperature',hover_data=['station'],height = 610)
+    fig = pe.scatter_mapbox(
+                            dfx,lat='latitude',
+                            lon = 'longitude',
+                            animation_frame=animation_frame_comp,
+                            color = 'temperature',
+                            hover_data=['station'],
+                            height = 710,
+                            color_continuous_scale='thermal',
+                            )
+
     fig.update_layout(mapbox_style = 'open-street-map',)
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     fig.update_traces(marker=dict(size=14,color='black'))
     # fig.update_layouta(updatemenus=dict())
 
     fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = frame_duration
-    fig.layout.coloraxis.colorbar.title.text = 'Temperature - °C'
+    # fig.layout.coloraxis.colorbar.title.text = 'Temperature - °C'
 
 
     fig.show()
