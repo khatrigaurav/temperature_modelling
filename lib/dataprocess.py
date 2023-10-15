@@ -31,7 +31,7 @@ def process_downloaded_data(location_name,source,item_identifier,year):
     '''
 
     input_path = os.path.join(os.getcwd(),'data',location_name,item_identifier+'_data_'+location_name.lower(),year)
-    output_path = os.path.join(os.getcwd(),'data',location_name+'_'+year)
+    output_path = os.path.join(os.getcwd(),'data/processed_data',location_name+'_'+year)
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 

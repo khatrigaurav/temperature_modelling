@@ -7,7 +7,6 @@ Created on Feb 7
 Implementation of CrowdQC quality checks.
 """
 
-import os
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -48,23 +47,26 @@ def level_check(dataframe, temp_field, time_field):
 
 
 def level1_check(dataframe, temp_field):
-    ''' '''
+    '''Checks for gross errors in the data i.e. temperature values outside the given range of -40 to 60C'''
 
+    indexes = []
     if max(dataframe[temp_field]) > 60 or min(dataframe[temp_field]) < -40:
         print('QC check 1 failed : Temperature exceeds given range')
         print('#########################')
         print(max(dataframe[temp_field]))
         print(min(dataframe[temp_field]))
+        indexes = dataframe.query(
+            '{} > 60 or {} < -40'.format(temp_field, temp_field)).index
 
     else:
         print('QC check 1 passed : Gross Error Test')
         print('#########################')
 
-    return
+    return indexes
 
 
 def level2_check(dataset, temp_field, time_field):
-    # This measures spatial consistency L2
+    '''This measures spatial consistency L2'''
     #     print(dataset.head())
 
     time1 = dataset.iloc[0][time_field]
@@ -142,6 +144,7 @@ def level2_check(dataset, temp_field, time_field):
 
 def level3_check(dataset, temp_field, resolution):
     ''' This function tests for temporal persistance'''
+
     # need to manually test this function
     if 'key' in dataset.columns:
         station_key = 'key'
