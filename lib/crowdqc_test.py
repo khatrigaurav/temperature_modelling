@@ -10,8 +10,11 @@ Implementation of CrowdQC quality checks.
 import pandas as pd
 import numpy as np
 from datetime import datetime
+
 pd.options.mode.chained_assignment = None  # default='warn'
 
+''' Current flow : clean_missing , level1_check , level2_check, mean_comparison (helper.py)'''
+##To do : Mean/Std dev comparision with 3 nearest stations
 
 def clean_stations(df):
     """This function adds new month column, removes stations with missing months"""
@@ -32,6 +35,27 @@ def clean_stations(df):
     print(f"Final Stations : {len(complete_stations)}")
 
     return df, complete_stations
+
+def clean_missing(df, ratio=4000):
+    ''' Step 1 of QC cleaning
+        This function data with more than 4000 missing observations.
+        It then goes ahead and fills null values with linear interpolation
+    '''
+    print(f'Old Stats : Num of stations {len(df.station.unique())}, Total rows {len(df)}')
+
+    valid_stations =  df.groupby('station')['temperature'].apply(lambda x : x.count() > ratio).reset_index()
+    valid_stations = valid_stations[valid_stations.temperature == True].station.values
+
+    df = df[df.station.isin(valid_stations)]
+
+    df = df[df['station'].isin(valid_stations)]
+    df['temperature'] = df['temperature'].interpolate(method='linear',limit_direction='both')
+
+    print(f'New Stats : Num of stations {len(df.station.unique())}, Total rows {len(df)}')
+
+    return df
+
+
 
 
 def level_check(dataframe, temp_field, time_field):
@@ -62,7 +86,11 @@ def level1_check(dataframe, temp_field):
         print('QC check 1 passed : Gross Error Test')
         print('#########################')
 
-    return indexes
+    # removing invalid indexes
+    dataframe = dataframe[~dataframe.index.isin(indexes)]
+
+
+    return dataframe, indexes
 
 
 def level2_check(dataset, temp_field, time_field):
@@ -130,6 +158,7 @@ def level2_check(dataset, temp_field, time_field):
         print(
             f"QC Check 2 failed : Temporal inconsistency found, {avg} minutes range , for {len(invalid_)} rows  ")
         print('#########################')
+        return False
 
     if len(invalid_) == 0:
         print("QC Check 2 passed : Spike Test")
@@ -179,8 +208,8 @@ def level3_check(dataset, temp_field, resolution):
         else:
             print("Invalid Time resolution")
 
-        failed_indexes = dataset_cpy[dataset_cpy.rolling_mean ==
-                                     dataset_cpy[temp_field]].index
+        failed_indexes = dataset_cpy[(dataset_cpy.rolling_mean ==
+                                     dataset_cpy[temp_field]) & ()].index
         fi_list.append(failed_indexes)
 
         if len(failed_indexes) > 0:
@@ -209,8 +238,18 @@ def outlier_check(dataframe, temp_field='temp', time_field='expire_time_gmt'):
         resolution = level2_check(dataframe, temp_field, time_field)
         level3_check(dataframe, temp_field, resolution)
 
+# def find_consecutive_indexes(df, consecutive_count=6):
+#     temperature_values = df['temperature'].values
+#     consecutive_indexes = []
+
+#     for i in range(len(temperature_values) - consecutive_count + 1):
+#         if np.all(temperature_values[i:i + consecutive_count] == temperature_values[i]):
+#             consecutive_indexes.append(i)
+
+#     return consecutive_indexes
 
 # todo: what to do with incomplete station data
+
 def level4_check():
 
     return
