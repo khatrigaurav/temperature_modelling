@@ -1,3 +1,5 @@
 /data/
 /Resources/
-/Analytics/
+/Analytics/backup
+/Analytics/closest_stations.csv
+/Analytics/00 Predictor.ipynb
