@@ -5,10 +5,33 @@ import numpy as np
 import plotly.express as pe
 import plotly.offline as pyo
 from datetime import datetime
-from helper import resample_daily
 
+
+# os.chdir('/Users/gaurav/UAH/temperature_modelling/')
 # pyo.init_notebook_mode()
 
+HOME_PATH = '/Users/gaurav/UAH/temperature_modelling/'
+
+def resample_daily(df):
+    """Resamples the dataframe to daily values : Previous animation plot was hourly, need to do it daily now"""
+
+    df = df.sort_values(by=["station", "beg_time"])
+    df.index = [df.beg_time, df.station]
+    df = df.groupby(
+        [pd.Grouper(level="station"), pd.Grouper(level="beg_time", freq="D")]
+    ).mean()
+
+    df = df.reset_index()
+    df["beg_time"] = pd.to_datetime(df.beg_time)
+    df.sort_values(by=["station", "beg_time", "day_of_year"], inplace=True)
+
+    df = df[
+        ["station", "beg_time", "temperature",
+            "day_of_year", "latitude", "longitude"]
+    ]
+    df["temperature"] = df.temperature.round(2)
+
+    return df
 
 
 def combine_dataframes(dframes, source):
@@ -37,8 +60,7 @@ def process_downloaded_data(location_name, source, item_identifier, year):
     Usage : process_downloaded_data('Madison','wunderground','pws')
     '''
 
-    input_path = os.path.join(os.getcwd(
-    ), 'data', location_name, item_identifier+'_data_'+location_name.lower(), year)
+    input_path = os.path.join(HOME_PATH, 'data', location_name, item_identifier+'_data_'+location_name.lower(), year)
     output_path = os.path.join(
         os.getcwd(), 'data/processed_data', location_name+'_'+year)
     if not os.path.exists(output_path):
@@ -149,7 +171,7 @@ def process_wunder(pws_df):
     return pws_df
 
 
-def plot_(dfx, animation_frame_comp, frame_duration, station_name=None,resample=True):
+def plot_(dfx, animation_frame_comp = 'day_of_year', frame_duration = 200, station_name=None,resample=True):
     '''
     dfx                     : Source dataframe
     animation_frame_comp    : defines which column to animate upon (eg. year, month)
@@ -161,7 +183,6 @@ def plot_(dfx, animation_frame_comp, frame_duration, station_name=None,resample=
     # fig = pe.scatter_mapbox(dfx,lat='latitude',lon = 'longitude',animation_frame='day_of_year',color = 'temperature',range_color=[-40,40],hover_data=['station'],height = 610)
     # Making the legend dynamic
 
-    print(os.listdir())
     if resample:
         dfx = resample_daily(dfx)
 
@@ -177,6 +198,7 @@ def plot_(dfx, animation_frame_comp, frame_duration, station_name=None,resample=
         hover_data=['station'],
         height=710,
         color_continuous_scale='thermal',
+        # width=200
     )
 
     fig.update_layout(mapbox_style='open-street-map',)
@@ -187,4 +209,5 @@ def plot_(dfx, animation_frame_comp, frame_duration, station_name=None,resample=
     fig.layout.updatemenus[0].buttons[0].args[1]["frame"]["duration"] = frame_duration
     # fig.layout.coloraxis.colorbar.title.text = 'Temperature - °C'
 
-    fig.show()
+    # fig.show()
+    return fig
