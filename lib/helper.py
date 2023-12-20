@@ -115,7 +115,7 @@ def to_gif(gif_directory,location,year,image_fps = 1.5):
     images = [imageio.imread(path) for path in image_paths if '.png' in path or 'jpeg' in path]
     imageio.mimsave(os.path.join(gif_directory,f'{location}_{year}.gif'), images,fps = image_fps)
 
-    print(image_paths)
+    # print(image_paths)
     # return images
 
 

@@ -14,7 +14,7 @@ import pandas as pd
 import numpy as np
 # os.chdir(HOME_DIR)
 
-import crowdqc_test as crowdqc
+import crowdqc as crowdqc
 import dataprocess as dp
 import helper
 

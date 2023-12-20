@@ -184,53 +184,6 @@ def get_train_test_data(final_df, window_size=5):
 def plot_op(model, x_test, y_test, hour_filter):
     ''' Plots the predicted and true values : Used by train save function'''
 
-    # plot_df = x_test.copy()
-    # predictions = model.predict(plot_df)
-    # plot_df['predicted_temperature'] = predictions
-    # plot_df['true_temperature'] = y_test
-
-    # if hour_filter is False:
-    #     plot_df['hour'] = 25
-
-    # # plt.plot(plot_df['predicted_temperature'],
-    # #          label='predicted', color='orange')
-    # # plt.plot(plot_df['true_temperature'], label='true')
-    # # plt.legend()
-
-    # error_score = metrics.mean_squared_error(y_test,predictions,squared=False,)
-    # print(f'Root Mean Squared Error : {error_score}')
-    # plt.show()
-
-    # cols_of_interest = ['true_temperature', 'predicted_temperature', 'hour']
-    # if 'latitude' in plot_df.columns:
-    #     cols_of_interest = ['latitude', 'longitude',
-    #                         'true_temperature', 'predicted_temperature', 'hour']
-
-    # op_frame = plot_df[cols_of_interest]
-
-    # # return op_frame
-    # if len(op_frame['hour'].unique()) > 1:
-        
-    #     # If multiple hours are present, then we do a line plot
-    #     op_frame.groupby(['hour']).mean()[
-    #         ['true_temperature', 'predicted_temperature']].plot()
-    #     plt.title('True vs Predicted Temperature for 24 hours')
-    #     plt.ylabel('Temperature in degree Celsius')
-
-    # else:
-    #     # If only one hour is present, then we do a bar plot
-    #     true_temp = op_frame['true_temperature'].mean()
-    #     predicted_temp = op_frame['predicted_temperature'].mean()
-    #     # plt.bar(['true'], [true_temp,], color=[
-    #     #         'orange'], label='true', alpha=0.5)
-    #     # plt.bar(['predicted'], [predicted_temp,], color=[
-    #     #         'blue'], label='predicted', alpha=0.5)
-    #     # plt.legend()
-    #     # plt.show()
-
-
-    # return plot_df,error_score
-
     plot_df = x_test.copy()
     plot_df['predicted_temperature'] = model.predict(plot_df)
     plot_df['true_temperature'] = y_test
@@ -243,7 +196,7 @@ def plot_op(model, x_test, y_test, hour_filter):
     
 
 
-def train_save(modelx, data,hour_filter,neural_net=None,clean_directory = False,fit=True):
+def train_save(modelx, data,hour_filter,neural_net=None,fit=True):
     ''' Function to train and save the model
         modelx : model object to be trained 
         model_name : name of the model
@@ -265,10 +218,7 @@ def train_save(modelx, data,hour_filter,neural_net=None,clean_directory = False,
 
     #when its bulk mode, we dont want to clean the directory
     #make sure first file is not deleted
-    if clean_directory:
-        # print('Cleaning')
-        helper.clean_directory(model_path)
-    
+
     cols_list.to_csv(os.path.join(model_path,model_name+'_cols_list.csv'), index=False)
 
     # To save up the model

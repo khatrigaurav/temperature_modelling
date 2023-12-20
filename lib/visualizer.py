@@ -124,15 +124,16 @@ def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plo
 
     plt.figure(figsize=(10,10))
 
-    plt.imshow(temperature_raster, extent=(
-        xmin, xmax, ymin, ymax), cmap=cmap, origin='upper')
+    # plt.imshow(temperature_raster, extent=(
+    #     xmin, xmax, ymin, ymax), cmap=cmap, origin='upper')
 
     if plot_boundary:
         BOUNDARY_GDF_EPS.boundary.plot(
             ax=plt.gca(), edgecolor='black', linewidth=1)
 
     # gdf.plot(ax=plt.gca(), color='red', markersize=1)
-    plt.colorbar(label='Temperature (C)', shrink=0.5)
+    # plt.colorbar(label='Temperature (C)', shrink=0.5)
+    plt.colorbar(label='Temperature (C)')
     
 
     data = pd.read_csv('/Users/gaurav/UAH/temperature_modelling/Analytics/temp_data/grouped_data.csv')
@@ -216,65 +217,23 @@ def plot_mean(model_dict,model_name='Random Forest',col_list=None):
     ''' This function plots the mean RMSE and mean predicted and actual temperature
         Used in Modeller.ipynb
         model_dict : Dictionary of format {hour : [prediction_data,error_value,feature_importances]}
+        bulk_mode : If True, then 24 models are trained in bulk
         '''
-    hours = []
-    mean_error = []
-    predicted = []
-    actual = []
-    feature_importances = []
-    
-    if len(model_dict.keys()) == 1:
-        bulk_mode = False
-        #this means that model is only trained for one hour
-    else:
-        bulk_mode = True
-
-    if bulk_mode:
-        for hour_ in model_dict.keys():
-            hours.append(hour_)
-            mean_error.append(model_dict[hour_][1].mean())
-            predicted.append(model_dict[hour_][0].predicted_temperature.mean())
-            actual.append(model_dict[hour_][0].true_temperature.mean())
-            feature_importances.append(model_dict[hour_][2])
-
-    if not bulk_mode:
-        data = model_dict[25][0]
-        for hour in sorted(data.hour.unique()):
-            hours.append(hour)
-            data_slice = data[data.hour == hour]
-            error_val = metrics.mean_squared_error(data_slice.predicted_temperature,data_slice.true_temperature,squared=False)
-            mean_error.append(error_val)
-            predicted.append(data_slice.predicted_temperature.mean())
-            actual.append(data_slice.true_temperature.mean())
-            feature_importances.append(model_dict[25][2])
-
-
-    # return hours,mean_error,predicted,actual,feature_importances
-    hours = [x+1 for x in hours]
-    plt.figure()
-    plt.plot(hours,mean_error)
-    plt.xlabel('Hour')
-    plt.ylabel('RMSE')
-    plt.title('Mean RMSE vs Hour for '+model_name)
-    
-    #plot a horizonal mean line
+    data = model_dict['hourly_values']
+    mean_error = data.hourly_rms.mean()
+    data.groupby('hour').mean()['hourly_rms'].plot(xlabel='Hour',
+                                                   ylabel='RMSE',
+                                                   title=f'Hourly RMSE for {model_name}')
     plt.axhline(np.mean(mean_error), color='r', linestyle='--',label='Mean RMSE')
     plt.legend()
 
-    plt.figure()
-    plt.plot(hours,predicted)
-    plt.plot(hours,actual)
-    plt.xlabel('Hour')
-    plt.ylabel('Temperature in C')
-    plt.title('Predicted vs Actual Temperature for '+model_name)
-    plt.legend(['Predicted','Actual'])
-
+    data.groupby('hour').mean()[['predicted_temperature',
+                                 'true_temperature']].plot(xlabel='Hour',
+                                                           ylabel='Temperature in C',
+                            title='Predicted vs Actual Temperature for '+model_name)
     try:
-        feature_importances = np.sum(feature_importances,axis=0)
-        # print(f'Feature importances for {model_name} : {feature_importances}')
-        # print(f'col_list : {col_list}')
-        plot_feature_importances(test_column_list=col_list,bulk_importances=feature_importances)
-
-    except Exception as e:
+        plot_feature_importances(test_column_list=col_list,
+                                 bulk_importances=model_dict['feature_importances'])
+    except Exception:
         # print(e)
         print('Feature importances not available')

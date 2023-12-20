@@ -10,6 +10,7 @@ Implementation of CrowdQC quality checks.
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import matplotlib.pyplot as plt
 
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -250,6 +251,48 @@ def outlier_check(dataframe, temp_field='temp', time_field='expire_time_gmt'):
 
 # todo: what to do with incomplete station data
 
-def level4_check():
 
-    return
+
+## Functions for data cleaning and ingestion
+
+def level_1_plot(grouped_data):
+    ''' This function plots the temperature pattern for all stations for June 2021
+        Used to show initial pattern before cleaning
+    '''
+    grouped_datax = grouped_data.copy()
+    grouped_datax['std_dev'] = grouped_datax.groupby('hour')['temperature'].transform('std')
+    plt.figure(figsize=(12,8))
+    plt.errorbar(grouped_datax.hour, grouped_datax.temperature, yerr=grouped_datax.std_dev, fmt='o', ecolor='orange', capthick=2)
+
+    plt.xlabel('Hour')
+    plt.title('Temperature Pattern for all station for June 2021')
+
+    return plt
+
+
+def cleaning_outliers(grouped_data,variation=20):
+    ''' First function cleans the outliers from the data
+        variation = 20 means that if the temperature is more than 20% of the average of closest stations, then its an outlier
+    '''
+    gd = grouped_data[['station', 'hour','latitude','longitude','temperature','closest_station_1_temp','closest_station_2_temp','closest_station_3_temp']]
+    gd.loc[:,'average_temp'] = gd[['closest_station_1_temp','closest_station_2_temp','closest_station_3_temp']].mean(axis=1)
+
+    gd['variation_closest'] = 100*abs(gd['temperature']-gd['average_temp'])/gd['average_temp']
+    flags = gd[gd.variation_closest>20].groupby('station').count().index.values
+
+    return flags
+
+def clean_missing_data(final_df,print_missing=False):
+    ''' Removing those stations which have a lot of missing data for weeks, months
+    '''
+    missing_stations = []
+    for station_id in final_df.station.unique():
+        data_segment = final_df[final_df.station==station_id]
+        obs = data_segment.resample('D',on='beg_time').mean().reset_index().count()['temperature']
+        if obs < 20:
+            missing_stations.append(station_id)
+            
+            if print_missing:
+                print(f'{station_id} has {obs} observations in June 2021')
+
+    return missing_stations
