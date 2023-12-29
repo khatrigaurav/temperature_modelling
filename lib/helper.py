@@ -77,7 +77,6 @@ def convert_to_gpd(data,crs,convert_to = False):
 
         Usage Example :  convert_to_gpd(df_,'epsg:4326',convert_to='epsg:6879')   
     '''
-    
     new_df = gpd.GeoDataFrame(data).reset_index().drop('index',axis=1)
     new_df['geometry'] = [Point(xy) for xy in zip(new_df['longitude'], new_df['latitude'])]
     new_df = gpd.GeoDataFrame(new_df,geometry=new_df['geometry'],crs=crs)
@@ -86,8 +85,7 @@ def convert_to_gpd(data,crs,convert_to = False):
         new_df = new_df.to_crs(convert_to)
 
     new_df['latitude'] = new_df.geometry.y
-    new_df['longitude'] = new_df.geometry.x
-        
+    new_df['longitude'] = new_df.geometry.x   
     return new_df
 
 def get_list_of_stations(temperature_data_1,data_col_name='data'):
