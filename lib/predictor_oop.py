@@ -255,11 +255,9 @@ class Predictor():
         urb_cols = ['valueImperviousfraction', 'valueTreefraction', 'valueBuildingheight',
                     'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction']
         lst_cols = ['value_LST']
-
         urb_merged = ec_data_segment.merge(
             urb_data_segment, on=['station', 'latitude', 'longitude'], how='inner')
         
-
         urb_merged = urb_merged[['station', 'latitude',
                                 'longitude', 'hour'] + lst_cols + urb_cols]
 
@@ -271,15 +269,21 @@ class Predictor():
             closest_columns['latitude']  = np.round(closest_columns['latitude'], 7)
             closest_columns['longitude']  = np.round(closest_columns['longitude'], 7)
 
+            # print(closest_columns.hour.unique())
+            # print(urb_merged.hour.unique())
 
             test_data = closest_columns.merge(
-                urb_merged, on=['station', 'latitude', 'longitude', 'hour'], how='inner')
+                urb_merged, on=['station', 'latitude', 'longitude'], how='inner')
+            # print(f'Test data shape inside loop : {test_data.shape}')
+
             test_data = test_data.drop('station', axis=1).rename(
                 {'value_LST': 'adjusted_lst'}, axis=1)
             
+            test_data = test_data.drop('hour_x', axis=1).rename(
+                {'hour_y': 'hour'}, axis=1)
+            
             # test_data['day_of_year'] = test_data['beg_time'].dt.dayofyear
             # test_data['day_of_year'] = pd.to_datetime(test_data['beg_time']).dt.dayofyear
-
         else:
             test_data = urb_merged.rename({'value_LST': 'adjusted_lst'}, axis=1)
             # test_data['day_of_year'] = 1
@@ -323,16 +327,15 @@ class Predictor():
             ec2_segment = self.ec_data_seg[self.ec_data_seg.station.isin(station_list)]
             urb2_segment = urb_data[urb_data.station.isin(station_list)]
 
-
             if self.model_attrs.model_closest_flag:
                 # closest_station_data = initialize_closest_station(self.ec_data_seg)
 
                 #The filter is set to @closest_station_data.hour.unique()[0] because closest stations are independent of hour
                 closest_station_data = closest_station_data.query('hour == @closest_station_data.hour.unique()[0]')
-
                 #It contains the closest station data for the given hour
                 final = self.add_temp_data(closest_station_data)
                 test_data = self.add_urban_data(ec2_segment, urb2_segment, closest_columns=final)
+                # print(test_data.columns)
                 if debug:
                     return ec2_segment, urb2_segment,test_data
 
@@ -340,6 +343,7 @@ class Predictor():
                 test_data = self.add_urban_data(ec2_segment, urb2_segment, closest_columns=None)
 
             test_data = test_data.fillna(method='ffill')
+            test_data = test_data.fillna(method='bfill')
             # print(test_data.columns)
             # print(col_list)
             # print(f'Column difference : {set(col_list) - set(test_data.columns)}')
@@ -349,7 +353,7 @@ class Predictor():
                 return
             
             # print(f'Column difference : {set(col_list) - set(test_data.columns)}')
-            # print(test_data.columns)
+            # print(test_data.isna().sum())
             test_data['prediction_temp'] = self.model.predict(test_data[col_list])
             column_set = ['latitude', 'longitude']
             

@@ -124,8 +124,8 @@ def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plo
 
     plt.figure(figsize=(10,10))
 
-    # plt.imshow(temperature_raster, extent=(
-    #     xmin, xmax, ymin, ymax), cmap=cmap, origin='upper')
+    plt.imshow(temperature_raster, extent=(
+        xmin, xmax, ymin, ymax), cmap=cmap, origin='upper')
 
     if plot_boundary:
         BOUNDARY_GDF_EPS.boundary.plot(
