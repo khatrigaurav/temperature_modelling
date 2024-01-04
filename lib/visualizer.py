@@ -223,7 +223,7 @@ def plot_mean(model_dict,model_name='Random Forest',col_list=None):
     mean_error = data.hourly_rms.mean()
     data.groupby('hour').mean()['hourly_rms'].plot(xlabel='Hour',
                                                    ylabel='RMSE',
-                                                   title=f'Hourly RMSE for {model_name}')
+                                                   title=f'Hourly RMSE for {model_name}, RMSE mean: {mean_error:.2f}')
     plt.axhline(np.mean(mean_error), color='r', linestyle='--',label='Mean RMSE')
     plt.legend()
 
