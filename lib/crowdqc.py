@@ -12,6 +12,10 @@ import numpy as np
 from datetime import datetime
 import matplotlib.pyplot as plt
 
+from copy import deepcopy
+from sklearn.utils.fixes import parse_version, sp_version
+from sklearn.linear_model import QuantileRegressor
+
 pd.options.mode.chained_assignment = None  # default='warn'
 
 ''' Current flow : clean_missing , level1_check , level2_check, mean_comparison (helper.py)'''
@@ -284,6 +288,7 @@ def cleaning_outliers(grouped_data,variation=20):
 
 def clean_missing_data(final_df,print_missing=False):
     ''' Removing those stations which have a lot of missing data for weeks, months
+        By default, it removes stations with less than 20 observations per day
     '''
     missing_stations = []
     for station_id in final_df.station.unique():
@@ -293,6 +298,58 @@ def clean_missing_data(final_df,print_missing=False):
             missing_stations.append(station_id)
             
             if print_missing:
-                print(f'{station_id} has {obs} observations in June 2021')
+                print(f'{station_id} has {obs} observations')
 
     return missing_stations
+
+
+
+def filter_quartiles(grouped_data,feature_column='valueTreefraction',quantiles=[0.02, 0.98]):
+    ''' This function filters the data based on quantiles, used to filter out values 
+        based on valueTreeFraction and valueImperviousFraction
+
+        quantiles : list of quantiles to be used for filtering
+        grouped_data : data that is grouped at hourly level 
+        feature_column : column to be used for filtering 
+                            eg.(valueTreeFraction, valueImperviousFraction)
+
+        Output : predictions : used for plotting quartile lines
+                outlier_dict : Contains list of stations that are outliers for each hour
+    '''
+    solver = "highs" if sp_version >= parse_version("1.6.0") else "interior-point"
+    predictions = {}
+    outlier_dict = {}
+
+    grouped_data_copy = deepcopy(grouped_data)
+
+    for hour in range(24):
+        data = {}
+        outliers = []
+        for q in quantiles:
+            gds = grouped_data_copy.query(f"hour=={hour}")
+            model = QuantileRegressor(quantile=q,solver=solver)
+            data_col = gds[feature_column]
+            model.fit(data_col.values.reshape(-1,1), gds.temperature.values)
+            temp_preds = model.predict(data_col.values.reshape(-1,1))
+            # data.append({q:temp_preds})
+            data[q] = temp_preds
+            # print(temp_preds)
+
+            if q == min(quantiles):
+                outliers.append(gds[gds.temperature<temp_preds.flatten()].station.values)
+
+            if q == max(quantiles):
+                outliers.append(gds[gds.temperature>temp_preds.flatten()].station.values)
+        predictions[hour] = data
+        outlier_dict[hour] = [k for row in outliers for k in row]
+
+    #Plotting example : 
+        # for hour in predictions.keys():
+        #     if hour in [0,8,16]:
+        #         figx = pe.scatter(grouped_data_copy.query("hour==@hour"),x = 'valueTreefraction', y='temperature',color='station',title=f'Temperature Pattern for Normal Stations at {hour} hours')
+        #         figx.add_trace(go.Scatter(x=grouped_data_copy.query("hour==@hour").valueTreefraction, y=predictions[hour][quantiles[0]], mode='lines', name='5% line'))
+        #         figx.add_trace(go.Scatter(x=grouped_data_copy.query("hour==@hour").valueTreefraction, y=predictions[hour][quantiles[1]], mode='lines', name='95% line'))
+        #         figx.show()
+    
+    del grouped_data_copy
+    return predictions, outlier_dict

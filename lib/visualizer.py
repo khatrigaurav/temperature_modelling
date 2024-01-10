@@ -108,7 +108,7 @@ def get_raster(df_, temp_col='prediction_temps', pixel_size=150):
     return temperature_raster, (xmin, xmax, ymin, ymax)
 
 
-def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plot_boundary=True,hour=None,model_name = None):
+def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plot_boundary=True,hour=None,model_name = None,dpi=300):
     ''' This function takes in a raster which is output of previous function 
         and plots it
         Usage : get_plot(raster1, bounds,cmap = 'coolwarm',change_null=True)
@@ -141,7 +141,7 @@ def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plo
         data = data[data.hour == hour]
         plt.scatter(data.longitude,data.latitude,c=data.temperature,s=50,cmap='coolwarm',edgecolors='black',linewidths=1)
         plt.title(f'Predicted Temperature for hour {hour}')
-        plt.savefig(f'{op_path}/scatter_hour_{str(hour).zfill(2)}.jpeg',dpi=300)
+        plt.savefig(f'{op_path}/scatter_hour_{str(hour).zfill(2)}.jpeg',dpi=dpi)
         print(f'Saved scatter plot in {op_path}')
 
 
