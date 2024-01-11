@@ -19,6 +19,7 @@ from shapely.geometry import Point
 import rioxarray as rxr
 import pandas as pd
 import os
+import datetime
 from lib.helper import resample_daily
 from sklearn import metrics
 # Constants and variable paths for raster plots
@@ -108,7 +109,7 @@ def get_raster(df_, temp_col='prediction_temps', pixel_size=150):
     return temperature_raster, (xmin, xmax, ymin, ymax)
 
 
-def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plot_boundary=True,hour=None,model_name = None,dpi=300):
+def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plot_boundary=True,hour=None,model_name = None,dpi=300,save=True):
     ''' This function takes in a raster which is output of previous function 
         and plots it
         Usage : get_plot(raster1, bounds,cmap = 'coolwarm',change_null=True)
@@ -141,8 +142,9 @@ def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plo
         data = data[data.hour == hour]
         plt.scatter(data.longitude,data.latitude,c=data.temperature,s=50,cmap='coolwarm',edgecolors='black',linewidths=1)
         plt.title(f'Predicted Temperature for hour {hour}')
-        plt.savefig(f'{op_path}/scatter_hour_{str(hour).zfill(2)}.jpeg',dpi=dpi)
-        print(f'Saved scatter plot in {op_path}')
+        if save:
+            plt.savefig(f'{op_path}/scatter_hour_{str(hour).zfill(2)}.jpeg',dpi=dpi)
+            print(f'Saved scatter plot in {op_path}')
 
 
 #coolwarm
@@ -219,6 +221,8 @@ def plot_mean(model_dict,model_name='Random Forest',col_list=None):
         model_dict : Dictionary of format {hour : [prediction_data,error_value,feature_importances]}
         bulk_mode : If True, then 24 models are trained in bulk
         '''
+    
+    print(f'Time at which model ran : {datetime.datetime.now().strftime("%D %H:%M:%S")}')
     data = model_dict['hourly_values']
     mean_error = data.hourly_rms.mean()
     data.groupby('hour').mean()['hourly_rms'].plot(xlabel='Hour',
