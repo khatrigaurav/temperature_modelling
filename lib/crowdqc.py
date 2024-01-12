@@ -282,11 +282,11 @@ def cleaning_outliers(grouped_data,variation=20):
     gd.loc[:,'average_temp'] = gd[['closest_station_1_temp','closest_station_2_temp','closest_station_3_temp']].mean(axis=1)
 
     gd['variation_closest'] = 100*abs(gd['temperature']-gd['average_temp'])/gd['average_temp']
-    flags = gd[gd.variation_closest>20].groupby('station').count().index.values
+    flags = gd[gd.variation_closest>variation].groupby('station').count().index.values
 
     return flags
 
-def clean_missing_data(final_df,print_missing=False):
+def clean_missing_data(final_df,print_missing=False,missing_count=20):
     ''' Removing those stations which have a lot of missing data for weeks, months
         By default, it removes stations with less than 20 observations per day
     '''
@@ -294,7 +294,7 @@ def clean_missing_data(final_df,print_missing=False):
     for station_id in final_df.station.unique():
         data_segment = final_df[final_df.station==station_id]
         obs = data_segment.resample('D',on='beg_time').mean().reset_index().count()['temperature']
-        if obs < 20:
+        if obs < missing_count:
             missing_stations.append(station_id)
             
             if print_missing:

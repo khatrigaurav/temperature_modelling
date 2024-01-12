@@ -36,7 +36,7 @@ closest_station_csv_path = '/Users/gaurav/UAH/temperature_modelling/Analytics/'
 # this file is generated in training to get list of columns used for training
 #This renamed to model_path+modeL_name+'_cols_list.csv'
 gen_test_data_file = pd.read_csv('Analytics/X_test.csv').head(1)
-
+wind_data = pd.read_csv('Analytics/temp_data/wind_data_mean.csv')
 
 def initialize_closest_station(ec_data):
     ''' This function initializes the closest station csv file
@@ -176,7 +176,7 @@ class Predictor():
     Predictor class to predict temperature values based on ECOSTRESS and urban surface data
     '''
 
-    def __init__(self, model_name, hour_filter=None):
+    def __init__(self, model_name, hour_filter=None,wind_data=False):
         if hour_filter is None:
             print('No hour filter provided, provide valid hour ranges')
             sys.exit()
@@ -195,7 +195,7 @@ class Predictor():
         self.ec_data_seg = None
         self.closest_station_data = None
         self.column_list = pd.read_csv(os.path.join(self.model_attrs.model_path,self.model_attrs.model_class,self.model_attrs.model_class+'_cols_list.csv')).columns.to_list()
-
+        self.wind_data = wind_data
 
     def set_ec_segments(self, ec_data):
         '''
@@ -354,6 +354,11 @@ class Predictor():
             
             # print(f'Column difference : {set(col_list) - set(test_data.columns)}')
             # print(test_data.isna().sum())
+            
+            #adding wind data
+            if self.wind_data:
+                test_data = test_data.merge(wind_data,on=['hour'],how='inner')
+            
             test_data['prediction_temp'] = self.model.predict(test_data[col_list])
             column_set = ['latitude', 'longitude']
             
