@@ -60,13 +60,13 @@ def get_station_ranges(len_ec_data):
     '''
 
     stations_ranges = []
-    max_range = len_ec_data//30000
+    max_range = len_ec_data//180000
     start_range = 1
-    end_range = 30001
+    end_range = 180001
     for i in range(max_range):
         station_range = np.arange(start_range, end_range)
         start_range = end_range
-        end_range = end_range+30000
+        end_range = end_range+180000
         stations_ranges.append(station_range)
 
     # this list to be used for sampling of data
@@ -74,6 +74,21 @@ def get_station_ranges(len_ec_data):
 
     return stations_ranges
 
+    # stations_ranges = []
+    # max_range = -(-len_ec_data//100000)
+    # start_range = 1
+    # end_range = 100001
+    # # for i in range(max_range):
+    # while start_range <= len_ec_data:
+    #     station_range = np.arange(start_range, end_range)
+    #     start_range = end_range
+    #     end_range = end_range+100000
+    #     stations_ranges.append(station_range)
+
+    # # this list to be used for sampling of data
+    # stations_ranges.append(np.arange(start_range, len_ec_data+1))
+
+    # return stations_ranges
 
 def get_ec_urban(ec_data=None, urb_data=None):
     ''' This function returns the ECOSTRESS and Urban Surface data for the given hour
@@ -118,7 +133,7 @@ def get_ec_urban(ec_data=None, urb_data=None):
     ec_data = ec_data[['station', 'latitude',
                        'longitude', 'hour', 'value_LST']]
     urb_data = urb_data[['station', 'latitude', 'longitude', 'valueImperviousfraction',
-                         'valueTreefraction', 'valueBuildingheight', 'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction']]
+                         'valueTreefraction', 'valueBuildingheight', 'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction','valueLandcover']]
 
     station_ranges = get_station_ranges(len(ec_data.station.unique()))
 
@@ -253,7 +268,7 @@ class Predictor():
         Feed only segment of ec_data
         '''
         urb_cols = ['valueImperviousfraction', 'valueTreefraction', 'valueBuildingheight',
-                    'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction']
+                    'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction','valueLandcover']
         lst_cols = ['value_LST']
         urb_merged = ec_data_segment.merge(
             urb_data_segment, on=['station', 'latitude', 'longitude'], how='inner')
@@ -357,6 +372,7 @@ class Predictor():
             
             #adding wind data
             if self.wind_data:
+                print(f'Integrating wind data')
                 test_data = test_data.merge(wind_data,on=['hour'],how='inner')
             
             test_data['prediction_temp'] = self.model.predict(test_data[col_list])
