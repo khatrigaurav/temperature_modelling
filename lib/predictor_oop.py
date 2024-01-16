@@ -133,7 +133,9 @@ def get_ec_urban(ec_data=None, urb_data=None):
     ec_data = ec_data[['station', 'latitude',
                        'longitude', 'hour', 'value_LST']]
     urb_data = urb_data[['station', 'latitude', 'longitude', 'valueImperviousfraction',
-                         'valueTreefraction', 'valueBuildingheight', 'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction','valueLandcover']]
+                         'valueTreefraction', 'valueBuildingheight', 'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction',
+                        #  'valueLandcover'
+                         ]]
 
     station_ranges = get_station_ranges(len(ec_data.station.unique()))
 
@@ -268,7 +270,8 @@ class Predictor():
         Feed only segment of ec_data
         '''
         urb_cols = ['valueImperviousfraction', 'valueTreefraction', 'valueBuildingheight',
-                    'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction','valueLandcover']
+                    'valueNearestDistWater', 'valueWaterfraction', 'valueBuildingfraction', #'valueLandcover'
+                    ]
         lst_cols = ['value_LST']
         urb_merged = ec_data_segment.merge(
             urb_data_segment, on=['station', 'latitude', 'longitude'], how='inner')
