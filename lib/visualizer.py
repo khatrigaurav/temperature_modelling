@@ -146,6 +146,7 @@ def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plo
             plt.savefig(f'{op_path}/scatter_hour_{str(hour).zfill(2)}.jpeg',dpi=dpi)
             print(f'Saved scatter plot in {op_path}')
 
+    return plt.figure
 
 #coolwarm
 def get_subplots(raster1,raster2,bounds,hour_filter=None,cmap='coolwarm',save=False,model_name=None):

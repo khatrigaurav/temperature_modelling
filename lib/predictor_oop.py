@@ -408,7 +408,7 @@ class Predictor():
         test_column_list = self.calculate_predictions(urb_data, stations_ranges)
         df = merge_predictions(self.model_attrs.model_predict_dir)
 
-        raster1, bounds = visualizer.get_raster(df, 'prediction_temp')
+        raster1, bounds = visualizer.get_raster(df, 'prediction_temp',pixel_size=70)
         raster2, bounds = visualizer.get_raster(df, 'adjusted_lst')
 
         return [raster1, raster2], bounds, test_column_list
