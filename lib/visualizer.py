@@ -140,7 +140,7 @@ def get_plot(temperature_raster, bounds, cmap='coolwarm', change_null=False, plo
     data = pd.read_csv('/Users/gaurav/UAH/temperature_modelling/Analytics/temp_data/grouped_data.csv')
     if hour is not None:
         data = data[data.hour == hour]
-        plt.scatter(data.longitude,data.latitude,c=data.temperature,s=50,cmap='coolwarm',edgecolors='black',linewidths=1)
+        plt.scatter(data.longitude,data.latitude,c=data.temperature,s=50,cmap=cmap,edgecolors='black',linewidths=1)
         plt.title(f'Predicted Temperature for hour {hour}')
         if save:
             plt.savefig(f'{op_path}/scatter_hour_{str(hour).zfill(2)}.jpeg',dpi=dpi)
