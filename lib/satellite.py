@@ -387,6 +387,7 @@ def create_station_file(location, year, timezone="America/Chicago", urban_data=F
         lambda row: Point(row.longitude, row.latitude), axis=1
     )
     
+    # print(df_station_reproj.columns)
     extract_raster_values(df_station_reproj, folder_raster, local_time_zone,dataframe)
 
 
