@@ -156,7 +156,7 @@ def get_time_adjusted_df(final_df, start_end_date=None, window_size=5, column='t
     return time_adjusted_df
 
 
-def get_train_test_data(final_df, window_size=5):
+def get_train_test_data(final_df, window_size=5,shuffle=False):
     ''' This function creates the train and test data from time adjusted dataframe'''
 
     time_adjusted_df = get_time_adjusted_df(final_df, start_end_date=None, window_size=window_size, column='temperature')
@@ -174,7 +174,7 @@ def get_train_test_data(final_df, window_size=5):
     time_adjusted_df.to_csv('Analytics/time_adjusted_df.csv', index=False)
 
     x_train, x_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.10, random_state=42, shuffle=False)
+        X, y, test_size=0.15, random_state=42, shuffle=True)
 
     # will be required later on to align columns between train and test
     # x_test.head().to_csv('Analytics/X_test.csv', index=False)
