@@ -1,15 +1,15 @@
 Data Extraction Pipeline:
 
-1) Wunderground data
-    a) PWS/Observation Stations/Airport
-        1) Get the station lists : 
-            1) Update wunder_config.ini for API_KEY and lat long ranges.
-            2) Go to /Orlando/ and run "python list_weather_stations.py [pws/observation/airport]". It will save corresponding file in  data/Orlando/. 
+1) Wunderground data <br>
+    a) PWS/Observation Stations/Airport<br>
+        1) Get the station lists : <br>
+            1) Update wunder_config.ini for API_KEY and lat long ranges.<br>
+            2) Go to /Orlando/ and run "python list_weather_stations.py [pws/observation/airport]". It will save corresponding file in  data/Orlando/. <br>
 
-            This saves a list of stations in data/Orlando/<pws>_station_lists_<orlando>.csv.
+            This saves a list of stations in data/Orlando/<pws>_station_lists_<orlando>.csv.<br>
 
 
-        2) Download the corresponding data: 
+        2) Download the corresponding data: <br>
             Scripts used : pws_script.py for pws data, observation_script.py for observation_data and parallel.py.
             Usage : 
     
