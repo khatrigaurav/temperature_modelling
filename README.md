@@ -40,5 +40,7 @@ the model’s generalizability and effectiveness in capturing spatio-temporal te
 
     Known Issues : You may need to go to wunderground and generate new "API KEY" time and again
 
-Once the data collection is complete we can utilize different notebooks in Analytics/ folder to run analysis or use your own functions. The current notebooks build upon several helper libraries and processing mechanism described in lib/ folder.
-   
+
+This marks the completion of data ingestion layer from the pipeline diagram.
+
+Once the data collection is complete we can utilize different notebooks in Analytics/ folder to run analysis or use your own functions. The current notebooks build upon several helper libraries and processing mechanism described in lib/ folder. 
