@@ -1,5 +1,19 @@
-Data Extraction Pipeline:
+### Project Description
+This project explores the development and application of a novel data architecture
+for predicting ambient temperatures across US cities, focusing on integrating
+multi-source data i.e. ECOSTRESS land surface temperatures, urban surface properties,
+and crowdsourced weather data. The methodology is designed for scalability and
+adaptability across different urban regions, employing rigorous data quality control
+to enhance prediction accuracy. 
 
+The validation of this model across diverse urban
+settings, demonstrated through rigorous RMSE comparisons and spatial mapping,
+validates its superiority over traditional models, hence beating benchmark models, with an average **RMSE of 0.8 degrees at 70 metre resolution**, which is the best result in this domain.
+
+Through experiments in diverse climatic conditions in Madison, Wisconsin, and Las Vegas, Nevada, the study assesses
+the model’s generalizability and effectiveness in capturing spatio-temporal temperature variations.
+
+Data Extraction Pipeline:
 1) Wunderground data <br>
     a) PWS/Observation Stations/Airport<br>
         1) Get the station lists : <br>
